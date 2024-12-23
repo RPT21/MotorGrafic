@@ -1,6 +1,6 @@
 #include "CameraObj.h"
 
-CameraObj::CameraObj(std::array<float, 3> camera_pos, float d, int pixels_x, int pixels_y, float len_x, float len_y)
+CameraObj::CameraObj(Eigen::Matrix<double, 3, 1> camera_pos, float d, int pixels_x, int pixels_y, float len_x, float len_y)
 {
 	// Com que camera_pos te el mateix nom que l'atribut de la classe, s'ha d'usar this-> per referir-se a l'atribut de la classe
 	this->camera_pos = camera_pos;
