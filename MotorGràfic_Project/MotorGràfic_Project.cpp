@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <GL/gl.h>
+#include "camera.h" // Incluim la classe camera - Com que l'he fet jo, s'ha de posar entre cometes, ja que es una llibreria local.
 
 #ifndef GL_CLAMP_TO_EDGE
 #define GL_CLAMP_TO_EDGE 0x812F
@@ -198,6 +199,9 @@ int main()
     glfwTerminate();
 
     print_image();
+
+    camera Camera();
+	esfericRotate({ 1, 0, 0 }, 0, 0); // Funcio definida per mi en camera.h
 
     return 0;
 }

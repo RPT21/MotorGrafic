@@ -18,7 +18,7 @@
     <ClCompile Include="MotorGràfic_Project.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="CameraObj.cpp">
+    <ClCompile Include="camera.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,7 +26,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CameraObj.h">
+    <ClInclude Include="camera.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
