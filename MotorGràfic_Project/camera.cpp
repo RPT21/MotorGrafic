@@ -106,7 +106,7 @@ Matrix<double, 3, 1> EsfericaToCartesiana(Matrix<double, 3, 1> point) {
 }
 
 
-camera::camera(Matrix<double, 3, 1> camera_pos, double d, int pixels_x, int pixels_y, double len_x, double len_y)
+Camera::Camera(Vector3d camera_pos, double d, int pixels_x, int pixels_y, double len_x, double len_y)
 {
 	// Aquesta es la funcio __init__ de la classe camera
 	// Com que camera_pos te el mateix nom que l'atribut de la classe, s'ha d'usar this-> per referir-se a l'atribut de la classe
@@ -131,7 +131,7 @@ camera::camera(Matrix<double, 3, 1> camera_pos, double d, int pixels_x, int pixe
 
 }
 
-void camera::rotateCamera(double theta, double phi)
+void Camera::rotateCamera(double theta, double phi)
 {
 	vect_direct_cam = esfericRotate(vect_direct_cam, theta, phi);
 	coordY_pantalla = esfericRotate(coordY_pantalla, theta, phi);
@@ -142,7 +142,7 @@ void camera::rotateCamera(double theta, double phi)
 	pla_camera = { vect_direct_cam[0], vect_direct_cam[1], vect_direct_cam[2] , D };
 }
 
-void camera::moveCamera_rotation(Matrix<double, 3, 1> vect, double theta)
+void Camera::moveCamera_rotation(Matrix<double, 3, 1> vect, double theta)
 {
 	camera_pos = rotateAxis(vect_direct_cam, vect, theta);
 
@@ -156,7 +156,7 @@ void camera::moveCamera_rotation(Matrix<double, 3, 1> vect, double theta)
 	pla_camera = { vect_direct_cam[0], vect_direct_cam[1], vect_direct_cam[2] , D };
 }
 
-void camera::rotateScreenX(double theta)
+void Camera::rotateScreenX(double theta)
 {
 	vect_direct_cam = rotateAxis(vect_direct_cam, coordX_pantalla, theta);
 	coordX_pantalla = rotateAxis(coordX_pantalla, coordX_pantalla, theta);
@@ -168,7 +168,7 @@ void camera::rotateScreenX(double theta)
 	pla_camera = { vect_direct_cam[0], vect_direct_cam[1], vect_direct_cam[2] , D };
 }
 
-void camera::rotateScreenY(double theta)
+void Camera::rotateScreenY(double theta)
 {
 	vect_direct_cam = rotateAxis(vect_direct_cam, coordY_pantalla, theta);
 	coordX_pantalla = rotateAxis(coordX_pantalla, coordY_pantalla, theta);
@@ -180,7 +180,7 @@ void camera::rotateScreenY(double theta)
 	pla_camera = { vect_direct_cam[0], vect_direct_cam[1], vect_direct_cam[2] , D };
 }
 
-void camera::followPoint(Matrix<double, 3, 1> punt)
+void Camera::followPoint(Matrix<double, 3, 1> punt)
 {
 	punt = punt - camera_pos;
 	Matrix<double, 3, 1> punt_esferiques = CartesianaToEsferica(punt);
@@ -197,13 +197,13 @@ void camera::followPoint(Matrix<double, 3, 1> punt)
 	pla_camera = { vect_direct_cam[0], vect_direct_cam[1], vect_direct_cam[2] , D };
 }
 
-void camera::intrinsicRotation(double theta)
+void Camera::intrinsicRotation(double theta)
 {
 	coordX_pantalla = rotateAxis(coordX_pantalla, vect_direct_cam, theta);
 	coordY_pantalla = rotateAxis(coordY_pantalla, vect_direct_cam, theta);
 }
 
-void camera::moveCamera(Matrix<double, 3, 1> vect)
+void Camera::moveCamera(Matrix<double, 3, 1> vect)
 {
 	double inc_y = vect[0];
 	double inc_x = -vect[1];
@@ -219,4 +219,23 @@ void camera::moveCamera(Matrix<double, 3, 1> vect)
 
 }
 
+Vector3d Camera::getPos() const 
+{
+	return camera_pos;
+}
+
+Vector3d Camera::getBaseX() const
+{
+	return coordX_pantalla;
+}
+
+Vector3d Camera::getBaseY() const
+{
+	return coordY_pantalla;
+}
+
+Vector3d Camera::getBaseZ() const
+{
+	return vect_direct_cam;
+}
 

@@ -9,10 +9,10 @@ Matrix<double, 3, 1> rotateAxis(Matrix<double, 3, 1> point, Matrix<double, 3, 1>
 Matrix<double, 3, 1> CartesianaToEsferica(Matrix<double, 3, 1> point);
 Matrix<double, 3, 1> EsfericaToCartesiana(Matrix<double, 3, 1> point);
 
-// Aquesta es la definicio de la classe camera
-class camera
+// Aquesta es la definicio de la classe Camera
+class Camera
 {
-    // Definim els metodes i atributs de la classe camera
+    // Definim els metodes i atributs de la classe Camera
 private:
     // Atributs de la classe camera
 
@@ -40,7 +40,7 @@ public:
 
     // Constructor de la classe camera - Quan es crea un objecte de la classe camera, es crida aquest metode
     // Si no s'especifica, s'executa un constructor per defecte que es de tipus void
-    camera(Eigen::Matrix<double, 3, 1> camera_pos, double d, int pixels_x, int pixels_y, double len_x, double len_y);
+    Camera(Vector3d camera_pos, double d, int pixels_x, int pixels_y, double len_x, double len_y);
 
     // Definim la resta de metodes de la classe camera
     void rotateCamera(double theta, double phi);
@@ -51,6 +51,16 @@ public:
     void intrinsicRotation(double theta);
     void moveCamera(Matrix<double, 3, 1> vect);
 
-	// Destructor de la classe camera - default vol dir que es el destructor per defecte, que no fa res, i es crida quan es destrueix l'objecte
-    ~camera() = default;
+	// Els metodes const nomes llegeixen els atributs de la classe, pero no els modifiquen
+	// Si el const va al principi de tot, vol dir que el que retorna la funcio no es pot modificar
+	// Si el const va al final, vol dir que la funcio no modifica els atributs de la classe
+	// Aixo optimiza el programa, ja que el compilador sap que no es modifiquen els atributs de la classe
+
+    Vector3d getPos() const;
+    Vector3d getBaseX() const;
+    Vector3d getBaseY() const;
+    Vector3d getBaseZ() const;
+
+	// Destructor de la classe Camera - default vol dir que es el destructor per defecte, que no fa res, i es crida quan es destrueix l'objecte
+    ~Camera() = default;
 };
