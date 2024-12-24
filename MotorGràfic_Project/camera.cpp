@@ -239,3 +239,8 @@ Vector3d Camera::getBaseZ() const
 	return vect_direct_cam;
 }
 
+Vector4d Camera::getPlane() const
+{
+	return pla_camera;
+}
+

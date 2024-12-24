@@ -60,6 +60,7 @@ public:
     Vector3d getBaseX() const;
     Vector3d getBaseY() const;
     Vector3d getBaseZ() const;
+	Vector4d getPlane() const;
 
 	// Destructor de la classe Camera - default vol dir que es el destructor per defecte, que no fa res, i es crida quan es destrueix l'objecte
     ~Camera() = default;
