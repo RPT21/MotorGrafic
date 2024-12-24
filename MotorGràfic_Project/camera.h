@@ -3,11 +3,11 @@
 using namespace Eigen;
 
 // Definim les funcions que utilitzarem en camera.cpp
-Matrix3d R(Matrix<double, 3, 1> vect, double theta);
-Matrix<double, 3, 1> esfericRotate(Matrix<double, 3, 1> vect, double theta, double phi);
-Matrix<double, 3, 1> rotateAxis(Matrix<double, 3, 1> point, Matrix<double, 3, 1> vect, double theta);
-Matrix<double, 3, 1> CartesianaToEsferica(Matrix<double, 3, 1> point);
-Matrix<double, 3, 1> EsfericaToCartesiana(Matrix<double, 3, 1> point);
+Matrix3d R(Vector3d vect, double theta);
+Vector3d esfericRotate(Vector3d vect, double theta, double phi);
+Vector3d rotateAxis(Vector3d point, Vector3d vect, double theta);
+Vector3d CartesianaToEsferica(Vector3d point);
+Vector3d EsfericaToCartesiana(Vector3d point);
 
 // Aquesta es la definicio de la classe Camera
 class Camera
@@ -18,14 +18,14 @@ private:
 
     // Vector columna (3x1)
     // Eigen::Matrix<TipoDato, Filas, Columnas>
-    // Eigen::Matrix<double, 3, 1> vector_name
+    // Eigen::Matrix<double, 3, 1> vector_name - Equivalent a Vector3d
 
-    Matrix<double, 3, 1> camera_pos;
-    Matrix<double, 3, 1> vect_direct_cam;
-    Matrix<double, 3, 1> coordY_pantalla;
-    Matrix<double, 3, 1> coordX_pantalla;
-    Matrix<double, 3, 1> punt_pla;
-    Matrix<double, 4, 1> pla_camera;
+    Vector3d camera_pos;
+    Vector3d vect_direct_cam;
+    Vector3d coordY_pantalla;
+    Vector3d coordX_pantalla;
+    Vector3d punt_pla;
+    Vector4d pla_camera;
 
     double d;
     int pixels_x;
@@ -44,12 +44,12 @@ public:
 
     // Definim la resta de metodes de la classe camera
     void rotateCamera(double theta, double phi);
-    void moveCamera_rotation(Matrix<double, 3, 1> vect, double theta);
+    void moveCamera_rotation(Vector3d vect, double theta);
     void rotateScreenX(double theta);
     void rotateScreenY(double theta);
-    void followPoint(Matrix<double, 3, 1> punt);
+    void followPoint(Vector3d punt);
     void intrinsicRotation(double theta);
-    void moveCamera(Matrix<double, 3, 1> vect);
+    void moveCamera(Vector3d vect);
 
 	// Els metodes const nomes llegeixen els atributs de la classe, pero no els modifiquen
 	// Si el const va al principi de tot, vol dir que el que retorna la funcio no es pot modificar
@@ -60,7 +60,16 @@ public:
     Vector3d getBaseX() const;
     Vector3d getBaseY() const;
     Vector3d getBaseZ() const;
-	Vector4d getPlane() const;
+	Vector4d getScreenPlane() const;
+	Vector3d getScreenCenter() const;
+	double getLenScreenX() const;
+	double getLenScreenY() const;
+	double getLenPixelX() const;
+	double getLenPixelY() const;
+	int getScreenWidth() const;
+	int getScreenHeight() const;
+
+
 
 	// Destructor de la classe Camera - default vol dir que es el destructor per defecte, que no fa res, i es crida quan es destrueix l'objecte
     ~Camera() = default;

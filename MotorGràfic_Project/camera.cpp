@@ -8,7 +8,7 @@
 using namespace std;
 using namespace Eigen;
 
-Matrix3d R(Matrix<double, 3, 1> vect, double theta) {
+Matrix3d R(Vector3d vect, double theta) {
 	// Matrix2d es equivalent a una matriu de 2x2 de tipus float.
 	// Estem especificant que la funcio R retorna una matriu de 2x2 de tipus float.
 
@@ -33,7 +33,7 @@ Matrix3d R(Matrix<double, 3, 1> vect, double theta) {
 
 }
 
-Matrix<double, 3, 1> esfericRotate(Matrix<double, 3, 1> vect, double theta, double phi) {
+Vector3d esfericRotate(Vector3d vect, double theta, double phi) {
 
 	// Calculem els seno i coseno de l'angle
 	double c = cos(phi);
@@ -48,7 +48,7 @@ Matrix<double, 3, 1> esfericRotate(Matrix<double, 3, 1> vect, double theta, doub
 
 }
 
-Matrix<double, 3, 1> rotateAxis(Matrix<double, 3, 1> point, Matrix<double, 3, 1> vect, double theta) {
+Vector3d rotateAxis(Vector3d point, Vector3d vect, double theta) {
 	Matrix3d R_matrix = R(vect, theta);
 	return R_matrix * point;
 }
@@ -59,7 +59,7 @@ int sign(double x) {
 	return 0;              // Zero
 }
 
-Matrix<double, 3, 1> CartesianaToEsferica(Matrix<double, 3, 1> point) {
+Vector3d CartesianaToEsferica(Vector3d point) {
 	double theta, phi;
 
 	double x = point[0];
@@ -94,7 +94,7 @@ Matrix<double, 3, 1> CartesianaToEsferica(Matrix<double, 3, 1> point) {
 	return result;
 }
 
-Matrix<double, 3, 1> EsfericaToCartesiana(Matrix<double, 3, 1> point) {
+Vector3d EsfericaToCartesiana(Vector3d point) {
 	double r = point[0];
 	double theta = point[1];
 	double phi = point[2];
@@ -142,7 +142,7 @@ void Camera::rotateCamera(double theta, double phi)
 	pla_camera = { vect_direct_cam[0], vect_direct_cam[1], vect_direct_cam[2] , D };
 }
 
-void Camera::moveCamera_rotation(Matrix<double, 3, 1> vect, double theta)
+void Camera::moveCamera_rotation(Vector3d vect, double theta)
 {
 	camera_pos = rotateAxis(vect_direct_cam, vect, theta);
 
@@ -180,7 +180,7 @@ void Camera::rotateScreenY(double theta)
 	pla_camera = { vect_direct_cam[0], vect_direct_cam[1], vect_direct_cam[2] , D };
 }
 
-void Camera::followPoint(Matrix<double, 3, 1> punt)
+void Camera::followPoint(Vector3d punt)
 {
 	punt = punt - camera_pos;
 	Matrix<double, 3, 1> punt_esferiques = CartesianaToEsferica(punt);
@@ -203,7 +203,7 @@ void Camera::intrinsicRotation(double theta)
 	coordY_pantalla = rotateAxis(coordY_pantalla, vect_direct_cam, theta);
 }
 
-void Camera::moveCamera(Matrix<double, 3, 1> vect)
+void Camera::moveCamera(Vector3d vect)
 {
 	double inc_y = vect[0];
 	double inc_x = -vect[1];
@@ -239,8 +239,43 @@ Vector3d Camera::getBaseZ() const
 	return vect_direct_cam;
 }
 
-Vector4d Camera::getPlane() const
+Vector4d Camera::getScreenPlane() const
 {
 	return pla_camera;
+}
+
+Vector3d Camera::getScreenCenter() const
+{
+	return punt_pla;
+}
+
+double Camera::getLenScreenX() const
+{
+	return len_x;
+}
+
+double Camera::getLenScreenY() const
+{
+	return len_y;
+}
+
+double Camera::getLenPixelX() const
+{
+	return mida_pixel_x;
+}
+
+double Camera::getLenPixelY() const
+{
+	return mida_pixel_y;
+}
+
+int Camera::getScreenWidth() const
+{
+	return pixels_x;
+}
+
+int Camera::getScreenHeight() const
+{
+	return pixels_y;
 }
 
