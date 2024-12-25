@@ -3,7 +3,10 @@
 #include <iostream>
 #include <vector>
 #include <GL/gl.h>
-# include <Eigen/Dense>
+#include <Eigen/Dense>
+#include "camera.h"
+#include "scene.h"
+#include "rasterizer.h"
 
 #ifndef GL_CLAMP_TO_EDGE
 #define GL_CLAMP_TO_EDGE 0x812F
@@ -51,9 +54,9 @@ std::vector<unsigned char> generate_rgb_image(int width, int height) {
     // Llenamos la matriz con un gradiente de color
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            image[(y * width + x) * 3 + 0] = static_cast<unsigned char>(x % 256);  // R
-            image[(y * width + x) * 3 + 1] = static_cast<unsigned char>(y % 256);  // G
-            image[(y * width + x) * 3 + 2] = static_cast<unsigned char>((x + y) % 256);  // B
+            image[(y * width + x) * 3 + 0] = static_cast<unsigned char>(255);  // R
+            image[(y * width + x) * 3 + 1] = static_cast<unsigned char>(255);  // G
+            image[(y * width + x) * 3 + 2] = static_cast<unsigned char>(255);  // B
         }
     }
     return image;
