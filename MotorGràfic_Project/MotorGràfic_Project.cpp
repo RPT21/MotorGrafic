@@ -4,12 +4,11 @@
 #include <GL/gl.h>
 #include <string>
 
-// Com que l'he fet jo, s'ha de posar entre cometes, ja que es una llibreria local.
+// Importem les llibreries locals
 #include "camera.h" 
 #include "scene.h" 
 #include "GLFW_Test.h"
 #include "rasterizer.h"
-#include <string>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -47,7 +46,7 @@ int main()
     // Hacer el contexto de la ventana actual
     glfwMakeContextCurrent(window);
 
-	// Deshabilita V - Sync - Si no es limiten els FPS a 60 Hz - El programa es torna molt inestable si es posa a 0
+	// Deshabilita V - Sync - Si no es limiten els FPS a 60 Hz
     // glfwSwapInterval(0);
 
     // Asignar el callback de teclado
@@ -71,6 +70,9 @@ int main()
     // Bucle principal
     while (!glfwWindowShouldClose(window)) {
 
+        // Procesar eventos - Teclat i altres events
+        glfwPollEvents();
+        
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {  // Flecha hacia delante
             camera.moveCamera({ 0, 0, 0.1 });
         }
@@ -124,17 +126,24 @@ int main()
             glfwSetWindowTitle(window, windowTitle.c_str());
         }
 
+		// Netegem el buffer de color
         glClear(GL_COLOR_BUFFER_BIT);
+
+        // Generem la nova image
         rasterizeImage(image, camera, scene);
-		texture = setup_texture(image, width, height);
+
+        // Apliquem la nova image a la textura - Important reutilitzar la mateixa textura. Crear una de nova dona lloc a memory leaks.
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image.data());
+
+		// Actualizem la textura
         display_image();
 
-        // Actualizar la ventana - Carrega la imatge que esta en el buffer a la pantalla
+        // Actualizar la ventana - Carrega la textura que esta en el buffer a la pantalla
         glfwSwapBuffers(window);
-
-        // Procesar eventos - Teclat i altres events
-        glfwPollEvents();
     }
+
+    // Alliberem la textura de la memoria
+    glDeleteTextures(1, &texture);
 
     // Destruir ventana y terminar GLFW
     glfwDestroyWindow(window);
