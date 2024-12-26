@@ -4,18 +4,17 @@
 #include "scene.h"
 #include "rasterizer.h"
 #include <algorithm>
+#include <execution>
+
 using namespace Eigen;
 using namespace std;
 
-void TraceLine(vector<unsigned char>& image, Camera& camera, Vector2d Point1, Vector2d Point2)
-{// Definim les variables que utilitzarem per a l'algoritme de Bresenham
+void TraceLine(vector<unsigned char>& image, Camera& camera, int x0, int y0, int x1, int y1)
+{
+	// Definim les variables que utilitzarem per a l'algoritme de Bresenham
 	int width = camera.getScreenWidth();
 	int height = camera.getScreenHeight();
 
-	int x0 = Point1[0];
-	int y0 = Point1[1];
-	int x1 = Point2[0];
-	int y1 = Point2[1];
 	int dx = abs(x1 - x0);
 	int dy = abs(y1 - y0);
 	int sx = x0 < x1 ? 1 : -1;
@@ -109,24 +108,24 @@ void rasterizeImage(vector<unsigned char>& image, Camera& camera, Scene& scene) 
 	Array3d t;
 	Array3d pant_x;
 	Array3d pant_y;
-	Array3d pixel_coords_x;
-	Array3d pixel_coords_y;
 	Array3d Vx;
 	Array3d Vy;
 	Array3d Vz;
 	Matrix3d v_direct;
-	int n = 0;
 
-	for (int i = 0; i < number_triangles; i++) {
+	Array3i pixel_coords_x;
+	Array3i pixel_coords_y;
 
-		v_direct = scene.triangles[i].vertexs;
+	for_each(execution::par, scene.triangles.begin(), scene.triangles.end(), [&](Triangle& triangle) {
+		
+		v_direct = triangle.vertexs;
 		v_direct = v_direct.colwise() - camera_pos;
+
 		// Normalitzem columna a columna i extreiem les components
 		v_direct = v_direct.colwise().normalized();
 		Vx = v_direct.row(0).array();
 		Vy = v_direct.row(1).array();
 		Vz = v_direct.row(2).array();
-
 
 		denominador = A * Vx + B * Vy + C * Vz;
 
@@ -150,14 +149,13 @@ void rasterizeImage(vector<unsigned char>& image, Camera& camera, Scene& scene) 
 		// Per convertir un vector en un array s'utilitza el metode array(), i per convertir un array en un vector s'utilitza el metode matrix()
 		// Aixo es fa perque els vectors no tenen totes les funcions que tenen els arrays, i per tant, s'han de convertir en arrays per poder utilitzar aquestes funcions
 
-		pixel_coords_x = (pant_x / lenPixel_x).round();
-		pixel_coords_y = (pant_y / lenPixel_y).round();
+		pixel_coords_x = (pant_x / lenPixel_x).round().cast<int>();
+		pixel_coords_y = (pant_y / lenPixel_y).round().cast<int>();
 
-        TraceLine(image, camera, Vector2d(pixel_coords_x[0], pixel_coords_y[0]), Vector2d(pixel_coords_x[1], pixel_coords_y[1]));
-		TraceLine(image, camera, Vector2d(pixel_coords_x[0], pixel_coords_y[0]), Vector2d(pixel_coords_x[2], pixel_coords_y[2]));
-		TraceLine(image, camera, Vector2d(pixel_coords_x[1], pixel_coords_y[1]), Vector2d(pixel_coords_x[2], pixel_coords_y[2]));
-			
+		TraceLine(image, camera, pixel_coords_x[0], pixel_coords_y[0], pixel_coords_x[1], pixel_coords_y[1]);
+		TraceLine(image, camera, pixel_coords_x[0], pixel_coords_y[0], pixel_coords_x[2], pixel_coords_y[2]);
+		TraceLine(image, camera, pixel_coords_x[1], pixel_coords_y[1], pixel_coords_x[2], pixel_coords_y[2]);
 
-		
-	}
+		});
+
 }

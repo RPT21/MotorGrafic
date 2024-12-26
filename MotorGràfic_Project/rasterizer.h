@@ -10,7 +10,7 @@ using namespace std;
 // S'utilitza quan es defineixen funcions en el header. Per solucionar aixo es millor declarar la funcio al header i definir la funcio al cpp corresponent.
 
 void rasterizeImage(vector<unsigned char>& image, Camera& camera, Scene& scene);
-void TraceLine(vector<unsigned char>& image, Camera& camera, Vector2d Point1, Vector2d Point2);
+void TraceLine(vector<unsigned char>& image, Camera& camera, int x0, int y0, int x1, int y1);
 
 
 

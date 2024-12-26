@@ -19,12 +19,12 @@ int main()
 {
     Vector3d camera_pos = 15 * Vector3d {1, 0, 0};
     double d = 8;
-    int pixels_x = 1024;
-    int pixels_y = 1024;
+    int width = 1024;
+    int height = 1024;
     double len_x = 10;
     double len_y = 10;
 
-    Camera camera(camera_pos, d, pixels_x, pixels_y, len_x, len_y);
+    Camera camera(camera_pos, d, width, height, len_x, len_y);
     camera.followPoint({ 0, 0, 0 });
 
     Scene scene;
@@ -37,7 +37,7 @@ int main()
     }
 
     // Crear una ventana
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Motor Gràfic", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(width, height, "Motor Gràfic", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
         std::cerr << "Failed to create GLFW window" << std::endl;
@@ -53,13 +53,8 @@ int main()
     // Asignar el callback de teclado
     // glfwSetKeyCallback(window, keyCallback);
 
-    // Generar la imagen RGB
-    int width = 1024;
-    int height = 1024;
-    auto image = generate_rgb_image(width, height);
-	//TraceLine(image,camera, { 300, 300 }, { 300, 600 });
-    //TraceLine(image, camera, { 300, 300 }, { 600, 300 });
-    //TraceLine(image, camera, { 600, 300 }, { 300, 600 });
+	// Definim el vector que contindra la imatge
+    vector<unsigned char> image(width * height * 3);
 
     // Configurar la textura con la imagen
     GLuint texture = setup_texture(image, width, height);
