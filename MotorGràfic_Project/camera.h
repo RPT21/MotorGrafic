@@ -1,13 +1,14 @@
 #pragma once // Aixo es per evitar que es faci un include de la mateixa llibreria multiples vegades
 #include <Eigen/Dense>
+#include "vec3.h"
 using namespace Eigen;
 
 // Definim les funcions que utilitzarem en camera.cpp
-Matrix3d R(Vector3d vect, double theta);
-Vector3d esfericRotate(Vector3d vect, double theta, double phi);
-Vector3d rotateAxis(Vector3d point, Vector3d vect, double theta);
-Vector3d CartesianaToEsferica(Vector3d point);
-Vector3d EsfericaToCartesiana(Vector3d point);
+array<vec3, 3> R(vec3 vect, double theta);
+vec3 esfericRotate(vec3 vect, double theta, double phi);
+vec3 rotateAxis(vec3 point, vec3 vect, double theta);
+vec3 CartesianaToEsferica(vec3 point);
+vec3 EsfericaToCartesiana(vec3 point);
 
 // Aquesta es la definicio de la classe Camera
 class Camera
@@ -20,12 +21,12 @@ private:
     // Eigen::Matrix<TipoDato, Filas, Columnas>
     // Eigen::Matrix<double, 3, 1> vector_name - Equivalent a Vector3d
 
-    Vector3d camera_pos;
-    Vector3d vect_direct_cam;
-    Vector3d coordY_pantalla;
-    Vector3d coordX_pantalla;
-    Vector3d punt_pla;
-    Vector4d pla_camera;
+    vec3 camera_pos;
+    vec3 vect_direct_cam;
+    vec3 coordY_pantalla;
+    vec3 coordX_pantalla;
+    vec3 punt_pla;
+    array<double, 4> pla_camera;
 
     double d;
     int pixels_x;
@@ -40,28 +41,28 @@ public:
 
     // Constructor de la classe camera - Quan es crea un objecte de la classe camera, es crida aquest metode
     // Si no s'especifica, s'executa un constructor per defecte que es de tipus void
-    Camera(Vector3d camera_pos, double d, int pixels_x, int pixels_y, double len_x, double len_y);
+    Camera(vec3 camera_pos, double d, int pixels_x, int pixels_y, double len_x, double len_y);
 
     // Definim la resta de metodes de la classe camera
     void rotateCamera(double theta, double phi);
-    void moveCamera_rotation(Vector3d vect, double theta);
+    void moveCamera_rotation(vec3 vect, double theta);
     void rotateScreenX(double theta);
     void rotateScreenY(double theta);
-    void followPoint(Vector3d punt);
+    void followPoint(vec3 punt);
     void intrinsicRotation(double theta);
-    void moveCamera(Vector3d vect);
+    void moveCamera(vec3 vect);
 
 	// Els metodes const nomes llegeixen els atributs de la classe, pero no els modifiquen
 	// Si el const va al principi de tot, vol dir que el que retorna la funcio no es pot modificar
 	// Si el const va al final, vol dir que la funcio no modifica els atributs de la classe
 	// Aixo optimiza el programa, ja que el compilador sap que no es modifiquen els atributs de la classe
 
-    Vector3d getPos() const;
-    Vector3d getBaseX() const;
-    Vector3d getBaseY() const;
-    Vector3d getBaseZ() const;
-	Vector4d getScreenPlane() const;
-	Vector3d getScreenCenter() const;
+    vec3 getPos() const;
+    vec3 getBaseX() const;
+    vec3 getBaseY() const;
+    vec3 getBaseZ() const;
+	array<double, 4> getScreenPlane() const;
+    vec3 getScreenCenter() const;
 	double getLenScreenX() const;
 	double getLenScreenY() const;
 	double getLenPixelX() const;

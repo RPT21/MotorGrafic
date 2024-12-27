@@ -3,6 +3,7 @@
 #include <Eigen/Dense>
 #include "camera.h"
 #include "scene.h"
+#include "vec3.h"
 using namespace Eigen;
 using namespace std;
 

@@ -9,6 +9,7 @@
 #include "scene.h" 
 #include "GLFW_Test.h"
 #include "rasterizer.h"
+#include "raytracer.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -16,7 +17,7 @@
 
 int main()
 {
-    Vector3d camera_pos = 15 * Vector3d {1, 0, 0};
+    vec3 camera_pos = 15 * vec3(1, 0, 0);
     double d = 8;
     int width = 1024;
     int height = 1024;
@@ -27,7 +28,12 @@ int main()
     camera.followPoint({ 0, 0, 0 });
 
     Scene scene;
-    scene.addTriangle({ 0, 0, 0 }, { 0, 2, 0 }, { 0, 0, 2 }, { 255, 0, 0 }, 0.5, 0.5);
+    scene.addTriangle({ 0, 0, 0 }, { 0, 2, 0 }, { -3, 0, 2 }, { 255, 0, 0 }, 15, 0.5);
+    scene.addTriangle({ 0, 0, 0 }, { 2, 0, 0 }, { 0, 2, 0 }, { 255, 0, 0 }, -1, 0.5);
+
+    scene.addLight(POINT, { 5, 5, 5 }, { 0, 0, 0 }, { 255, 255, 255 }, 0.8);
+    //scene.addLight(DIRECTIONAL, { 0, 0, 0 }, { -5, 5, 5 }, { 255, 255, 255 }, 0.2);
+    scene.addLight(AMBIENT, { 5, 5, 5 }, { 0, 0, 0 }, { 255, 255, 255 }, 0.2);
 
     // Inicializar GLFW
     if (!glfwInit()) {
@@ -130,7 +136,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Generem la nova image
-        rasterizeImage(image, camera, scene);
+        raytraceImage(image, camera, scene);
 
         // Apliquem la nova image a la textura - Important reutilitzar la mateixa textura. Crear una de nova dona lloc a memory leaks.
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image.data());

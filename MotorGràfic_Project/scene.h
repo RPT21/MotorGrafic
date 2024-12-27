@@ -27,6 +27,8 @@
 
 # include <vector> 
 # include <Eigen/Dense>
+# include <array>
+# include "vec3.h"
 
 using namespace Eigen;
 using namespace std;
@@ -39,29 +41,32 @@ enum LightType {
 
 struct Triangle
 {
-	Matrix3d vertexs;
-	Matrix<unsigned char, 3, 1> color;
+	array<vec3, 3> vertexs;
+	array<array<double, 3>, 3> changeBaseMatrix;
+	array<double, 4> pla_triangle;
+	vec3 norm_vector;
+	array<unsigned char, 3> color;
 	float specular;
 	float reflectance;
 
 	// Definim el constructor de la estructura Triangle:
 	// Assignem els valors dels vertexs, el color, la brillantor i la reflectancia al crear el triangle.
 	// Els vertexs estan definits en una matriu de 3x3, on cada columna es un vertex.
-	Triangle(const Vector3d& v1, const Vector3d& v2, const Vector3d& v3, const Matrix<unsigned char, 3, 1>& c, const float s, const float r);
+	Triangle(const vec3& v1, const vec3& v2, const vec3& v3, const array<unsigned char, 3>& c, const float s, const float r);
  
 };
 
 struct Light
 {
 	LightType type;
-	Matrix<double, 3, 1> position;
-	Matrix<double, 3, 1> direction;
-	Matrix<unsigned char, 3, 1> color;
+	vec3 position;
+	vec3 direction;
+	array<unsigned char, 3> color;
 	float intensity;
 
 	// Definim el constructor de la estructura Light
 	// Assignem els valors del tipus de llum, la posicio, la direccio, el color i la intensitat al crear la llum
-	Light(const LightType& t, const Vector3d& pos, const Vector3d& dir, const Matrix<unsigned char, 3, 1>& col, const float& inten)
+	Light(const LightType& t, const vec3& pos, const vec3& dir, const array<unsigned char, 3>& col, const float& inten)
 		: type(t), position(pos), direction(dir), color(col), intensity(inten) {}
 	
 };
@@ -76,10 +81,10 @@ struct Scene
 	// En el nostre cas tenim un vector que conte estructures, els elements del vector son estructures.
 	// La funcio inicialitza l'estructura amb els arguments que se li passen al final del vector.
 
-	void addTriangle(const Vector3d& v1, const Vector3d& v2, const Vector3d& v3, const Matrix<unsigned char, 3, 1> color, const float specular, const float reflectance) {
+	void addTriangle(const vec3& v1, const vec3& v2, const vec3& v3, const array<unsigned char, 3>& color, const float specular, const float reflectance) {
 		triangles.emplace_back(v1, v2, v3, color, specular, reflectance); // Crea i afegix directament el triangle
 	}
-	void addLight(const LightType type, const Vector3d& position, const Vector3d& direction, const Matrix<unsigned char, 3, 1> color, const float intensity) {
+	void addLight(const LightType type, const vec3& position, const vec3& direction, const array<unsigned char, 3> color, const float intensity) {
 		lights.emplace_back(type, position, direction, color, intensity); // Crea i afegix directament la llum
 	}
 };
