@@ -15,6 +15,7 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+
 int main()
 {
     vec3 camera_pos = 15 * vec3(1, 0, 0);
@@ -28,11 +29,14 @@ int main()
     camera.followPoint({ 0, 0, 0 });
 
     Scene scene;
-    scene.addTriangle({ 0, 0, 0 }, { 0, 2, 0 }, { -3, 0, 2 }, { 255, 0, 0 }, 15, 0.5);
-    scene.addTriangle({ 0, 0, 0 }, { 2, 0, 0 }, { 0, 2, 0 }, { 255, 0, 0 }, -1, 0.5);
+    scene.addTriangle({ 0, 0, 0 }, { 0, 2, 0 }, { 0, 0, 5 }, { 0, 0, 255 }, 1, 0.8);
+    scene.addTriangle({ 0, 2, 0 }, { 0, 2, 5 }, { 0, 0, 5 }, { 0, 0, 255 }, 1, 0.8);
 
-    scene.addLight(POINT, { 5, 5, 5 }, { 0, 0, 0 }, { 255, 255, 255 }, 0.8);
-    //scene.addLight(DIRECTIONAL, { 0, 0, 0 }, { -5, 5, 5 }, { 255, 255, 255 }, 0.2);
+    scene.addTriangle({ -10, -10, 0 }, { 10, -10, 0 }, { -10, 10, 0 }, { 200, 50, 250 }, -1, 0);
+    scene.addTriangle({ 10, 10, 0 }, { -10, 10, 0 }, { 10, -10, 0 }, { 200, 50, 250 }, -1, 0);
+
+    scene.addLight(POINT, { 5, 1, 5 }, { 0, 0, 0 }, { 255, 255, 255 }, 0.6);
+    scene.addLight(DIRECTIONAL, { 0, 0, 0 }, { -5, 0, 5 }, { 255, 255, 255 }, 0.2);
     scene.addLight(AMBIENT, { 5, 5, 5 }, { 0, 0, 0 }, { 255, 255, 255 }, 0.2);
 
     // Inicializar GLFW
