@@ -16,20 +16,20 @@ void TraceLine(vector<unsigned char>& image, Camera& camera, int x0, int y0, int
 	int width = camera.getScreenWidth();
 	int height = camera.getScreenHeight();
 
+	if ((x0 < 0 or x0 >= width) and (y0 < 0 or y0 >= height) and (x1 < 0 or x1 >= width) and (y1 < 0 or y1 >= height)) {
+		return;
+	}
+	else if (x0 < 0 or x0 >= width or y0 < 0 or y0 >= height) {
+		swap(x0, x1);
+		swap(y0, y1);
+	}
+
 	int dx = abs(x1 - x0);
 	int dy = abs(y1 - y0);
 	int sx = x0 < x1 ? 1 : -1;
 	int sy = y0 < y1 ? 1 : -1;
 	int err = dx - dy;
 	int e2;
-
-	if (x0 < 0 || x0 >= width || y0 < 0 || y0 >= height || x1 < 0 || x1 >= width || y1 < 0 || y1 >= height) {
-		return;
-	}
-	else if (x0 < 0 || x0 >= width || y0 < 0 || y0 >= height) {
-		swap(x0, x1);
-		swap(y0, y1);
-	}
 
 	// Bucle per a recorrer tots els pixels de la linia
 	while (true) {
@@ -102,22 +102,22 @@ void rasterizeImage(vector<unsigned char>& image, Camera& camera, Scene& scene) 
 	vec3 Base_x = camera.getBaseX();
 	vec3 Base_y = camera.getBaseY();
 
-	vec3 inter_x;
-	vec3 inter_y;
-	vec3 inter_z;
-	vec3 denominador;
-	vec3 t;
-	vec3 pant_x;
-	vec3 pant_y;
-	vec3 Vx;
-	vec3 Vy;
-	vec3 Vz;
-	array<vec3, 3> v_direct;
-
-	array<int, 3> pixel_coords_x;
-	array<int, 3>  pixel_coords_y;
-
 	for_each(execution::par, scene.triangles.begin(), scene.triangles.end(), [&](Triangle& triangle) {
+
+		vec3 inter_x;
+		vec3 inter_y;
+		vec3 inter_z;
+		vec3 denominador;
+		vec3 t;
+		vec3 pant_x;
+		vec3 pant_y;
+		vec3 Vx;
+		vec3 Vy;
+		vec3 Vz;
+		array<vec3, 3> v_direct;
+
+		array<int, 3> pixel_coords_x;
+		array<int, 3>  pixel_coords_y;
 		
 		v_direct = triangle.vertexs;
 		v_direct = v_direct - camera_pos;
@@ -156,9 +156,12 @@ void rasterizeImage(vector<unsigned char>& image, Camera& camera, Scene& scene) 
 		pixel_coords_x = (pant_x / lenPixel_x).round();
 		pixel_coords_y = (pant_y / lenPixel_y).round();
 
-		TraceLine(image, camera, pixel_coords_x[0], pixel_coords_y[0], pixel_coords_x[1], pixel_coords_y[1]);
-		TraceLine(image, camera, pixel_coords_x[0], pixel_coords_y[0], pixel_coords_x[2], pixel_coords_y[2]);
-		TraceLine(image, camera, pixel_coords_x[1], pixel_coords_y[1], pixel_coords_x[2], pixel_coords_y[2]);
+		if ((t[0] > 0) or (t[1] > 0) or (t[2] > 0)) {
+
+			TraceLine(image, camera, pixel_coords_x[0], pixel_coords_y[0], pixel_coords_x[1], pixel_coords_y[1]);
+			TraceLine(image, camera, pixel_coords_x[0], pixel_coords_y[0], pixel_coords_x[2], pixel_coords_y[2]);
+			TraceLine(image, camera, pixel_coords_x[1], pixel_coords_y[1], pixel_coords_x[2], pixel_coords_y[2]);
+		}
 
 		});
 
